@@ -62,9 +62,9 @@ public class Main {
         String xml = root.XML(); // generate XML from the node tree
         System.out.println(xml);
 
-        Writer.Instance.XML(root, "root.xml"); // write XML to drive
+        XmlWriter.Instance.XML(root, "root.xml"); // write XML to drive
 
-        IPax loaded = Reader.Instance.parse("./root.xml"); // parse XML to node tree
+        IPax loaded = XmlReader.Instance.parse("./root.xml"); // parse XML to node tree
         String xml_ = loaded.XML(); // generate XMl from loaded
         System.out.println(xml_);
 

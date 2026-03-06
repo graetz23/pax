@@ -358,7 +358,7 @@ class JsonGenerationTest {
     System.out.println("Level 5 roundtrip: XML -> IPax");
     // Parse XML to IPax
     java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(xml1.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-    IPax fromXml = Reader.Instance.stream(bis);
+    IPax fromXml = XmlReader.Instance.stream(bis);
 
     // Generate JSON
     System.out.println("Level 5 roundtrip: IPax -> JSON");

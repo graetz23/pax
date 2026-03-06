@@ -3,7 +3,7 @@
  * @details A Java written generator for plain old XML (POX) data domains
  * @copyright Copyright (c) 2017-2026 Christian (graetz23@gmail.com)
  * @author Christian (graetz23@gmail.com)
- * @file WriterTest.java
+ * @file XmlWriterTest.java
  */
 
 package de.graetz23.pax;
@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class WriterTest {
+class XmlWriterTest {
 
   @TempDir
   Path tempDir;
@@ -34,7 +34,7 @@ class WriterTest {
     root.Val("content");
 
     Path file = tempDir.resolve("output.xml");
-    boolean result = Writer.Instance.XML(root, file.toString());
+    boolean result = XmlWriter.Instance.XML(root, file.toString());
 
     assertTrue(result);
     assertTrue(Files.exists(file));
@@ -48,7 +48,7 @@ class WriterTest {
     IPax root = Instances.Factory().produce("root");
 
     Path file = tempDir.resolve("noextension");
-    Writer.Instance.XML(root, file.toString());
+    XmlWriter.Instance.XML(root, file.toString());
 
     assertTrue(Files.exists(tempDir.resolve("noextension.xml")));
   }
@@ -58,7 +58,7 @@ class WriterTest {
     IPax root = Instances.Factory().produce("root");
 
     Path file = tempDir.resolve("already.xml");
-    Writer.Instance.XML(root, file.toString());
+    XmlWriter.Instance.XML(root, file.toString());
 
     assertTrue(Files.exists(file));
   }
@@ -70,7 +70,7 @@ class WriterTest {
     root.Attrib().add("name", "test");
 
     Path file = tempDir.resolve("attr.xml");
-    Writer.Instance.XML(root, file.toString());
+    XmlWriter.Instance.XML(root, file.toString());
 
     String content = Files.readString(file);
     assertTrue(content.contains("id=\"123\""));
@@ -84,7 +84,7 @@ class WriterTest {
     root.Child().add("child2");
 
     Path file = tempDir.resolve("children.xml");
-    Writer.Instance.XML(root, file.toString());
+    XmlWriter.Instance.XML(root, file.toString());
 
     String content = Files.readString(file);
     assertTrue(content.contains("<parent>"));
@@ -94,7 +94,7 @@ class WriterTest {
 
   @Test
   void testWriteNullRoot() {
-    boolean result = Writer.Instance.XML(null);
+    boolean result = XmlWriter.Instance.XML(null);
     assertFalse(result);
   }
 
@@ -103,7 +103,7 @@ class WriterTest {
     IPax root = Instances.Factory().produce(null);
 
     Path file = tempDir.resolve("notag.xml");
-    Writer.Instance.XML(root, file.toString());
+    XmlWriter.Instance.XML(root, file.toString());
 
     assertTrue(Files.exists(file));
   }
@@ -119,7 +119,7 @@ class WriterTest {
     book.Child().add(title);
 
     Path file = tempDir.resolve("nested.xml");
-    Writer.Instance.XML(library, file.toString());
+    XmlWriter.Instance.XML(library, file.toString());
 
     String content = Files.readString(file);
     assertTrue(content.contains("<library>"));
@@ -130,7 +130,7 @@ class WriterTest {
   @Test
   void testXMLMethodNoFilename() {
     IPax root = Instances.Factory().produce("root");
-    boolean result = Writer.Instance.XML(root);
+    boolean result = XmlWriter.Instance.XML(root);
     assertTrue(result);
   }
 
@@ -140,7 +140,7 @@ class WriterTest {
     root.Val("UTF-8 test: äöü");
 
     Path file = tempDir.resolve("encoding.xml");
-    Writer.Instance.XML(root, file.toString());
+    XmlWriter.Instance.XML(root, file.toString());
 
     String content = Files.readString(file);
     assertTrue(content.contains("UTF-8"));

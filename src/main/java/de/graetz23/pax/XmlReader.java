@@ -3,7 +3,7 @@
  * @details A Java written generator for plain old XML (POX) data domains
  * @copyright Copyright (c) 2017-2026 Christian (graetz23@gmail.com)
  * @author Christian (graetz23@gmail.com)
- * @file Reader.java
+ * @file XmlReader.java
  *
  * Singleton SAX-based XML parser that converts an XML document into a
  * {@link IPax} node tree. The active {@link Instances#Factory()} is
@@ -45,18 +45,18 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class Reader {
+public class XmlReader {
 
   /**
    * The singleton instance. Use this field to call parsing methods, e.g.
-   * {@code Reader.Instance.parseLocalFile("library.xml")}.
+   * {@code XmlReader.Instance.parseLocalFile("library.xml")}.
    */
-  public static Reader Instance = new Reader();
+  public static XmlReader Instance = new XmlReader();
 
   /**
    * Private constructor enforcing the singleton pattern.
    */
-  private Reader() {
+  private XmlReader() {
   } // constructor
 
   /**

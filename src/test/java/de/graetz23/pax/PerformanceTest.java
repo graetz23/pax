@@ -135,7 +135,7 @@ class PerformanceTest {
     long start = System.nanoTime();
 
     for (int i = 0; i < 100; i++) {
-      Reader.Instance.stream(new ByteArrayInputStream(xmlBytes));
+      XmlReader.Instance.stream(new ByteArrayInputStream(xmlBytes));
     }
 
     long end = System.nanoTime();
@@ -222,7 +222,7 @@ class PerformanceTest {
 
     for (int i = 0; i < 100; i++) {
       String xml = original.XML();
-      IPax parsed = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+      IPax parsed = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
       assertEquals(100, parsed.Child().cnt());
     }
 
@@ -300,7 +300,7 @@ class PerformanceTest {
     }
 
     String xml = library.XML();
-    IPax parsed = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax parsed = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     long end = System.nanoTime();
     long duration = (end - start) / 1_000_000;

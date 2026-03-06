@@ -3,7 +3,7 @@
  * @details A Java written generator for plain old XML (POX) data domains
  * @copyright Copyright (c) 2017-2026 Christian (graetz23@gmail.com)
  * @author Christian (graetz23@gmail.com)
- * @file Writer.java
+ * @file XmlWriter.java
  *
  * Singleton utility for persisting a {@link IPax} node tree to an XML
  * file on disk. The output is always UTF-8 encoded and prefixed with the
@@ -11,7 +11,7 @@
  *
  * <p>Typical usage:</p>
  * <pre>{@code
- *   Writer.Instance.XML(root, "output.xml");
+ *   XmlWriter.Instance.XML(root, "output.xml");
  * }</pre>
  *
  * <p>The XML content is produced by calling {@link IPax#XML()} on the
@@ -31,18 +31,18 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 
-public class Writer {
+public class XmlWriter {
 
     /**
      * The singleton instance. Use this field to call write methods, e.g.
-     * {@code Writer.Instance.XML(root, "output.xml")}.
+     * {@code XmlWriter.Instance.XML(root, "output.xml")}.
      */
-    public static Writer Instance = new Writer();
+    public static XmlWriter Instance = new XmlWriter();
 
     /**
      * Private constructor enforcing the singleton pattern.
      */
-    private Writer() {
+    private XmlWriter() {
     } // constructor
 
     /**

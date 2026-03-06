@@ -3,7 +3,7 @@
  * @details A Java written generator for plain old XML (POX) data domains
  * @copyright Copyright (c) 2017-2026 Christian (graetz23@gmail.com)
  * @author Christian (graetz23@gmail.com)
- * @file ReaderEdgeCaseTest.java
+ * @file XmlReaderEdgeCaseTest.java
  */
 
 package de.graetz23.pax;
@@ -15,12 +15,12 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ReaderEdgeCaseTest {
+class XmlReaderEdgeCaseTest {
 
   @Test
   void testParseEmptyRoot() throws IOException {
     String xml = "<root></root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertNotNull(result);
     assertEquals("root", result.Tag());
@@ -30,7 +30,7 @@ class ReaderEdgeCaseTest {
   @Test
   void testParseRootWithOnlyWhitespaceValue() throws IOException {
     String xml = "<root>   \n\t  </root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertNotNull(result);
     assertFalse(result.hasVal());
@@ -39,7 +39,7 @@ class ReaderEdgeCaseTest {
   @Test
   void testParseSpecialCharactersInValue() throws IOException {
     String xml = "<root>Test &amp; More</root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertNotNull(result);
     assertNotNull(result.Val());
@@ -53,7 +53,7 @@ class ReaderEdgeCaseTest {
     }
     sb.append("</root>");
 
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(sb.toString().getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(sb.toString().getBytes()));
 
     assertNotNull(result);
     assertEquals(100, result.Child().cnt());
@@ -62,7 +62,7 @@ class ReaderEdgeCaseTest {
   @Test
   void testParseElementWithEmptyAttribute() throws IOException {
     String xml = "<root attr=\"\"><child/></root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertNotNull(result);
     assertTrue(result.hasAttrib());
@@ -73,7 +73,7 @@ class ReaderEdgeCaseTest {
   @Test
   void testParseMixedContent() throws IOException {
     String xml = "<root>text<child>inner</child>more text</root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertNotNull(result);
     assertTrue(result.hasChild());
@@ -82,7 +82,7 @@ class ReaderEdgeCaseTest {
   @Test
   void testParseSiblingWithAttributes() throws IOException {
     String xml = "<root><item id=\"1\" /><item id=\"2\" /><item id=\"3\" /></root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertNotNull(result);
     assertEquals(3, result.Child().cnt());
@@ -96,7 +96,7 @@ class ReaderEdgeCaseTest {
   @Test
   void testParseEntityReferences() throws IOException {
     String xml = "<root>&lt;tag&gt;</root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertNotNull(result);
   }

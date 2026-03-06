@@ -3,7 +3,7 @@
  * @details A Java written generator for plain old XML (POX) data domains
  * @copyright Copyright (c) 2017-2026 Christian (graetz23@gmail.com)
  * @author Christian (graetz23@gmail.com)
- * @file ReaderTest.java
+ * @file XmlReaderTest.java
  */
 
 package de.graetz23.pax;
@@ -19,7 +19,7 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ReaderTest {
+class XmlReaderTest {
 
   @TempDir
   Path tempDir;
@@ -34,7 +34,7 @@ class ReaderTest {
     String xml = "<root><child>value</child></root>";
     ByteArrayInputStream stream = new ByteArrayInputStream(xml.getBytes());
 
-    IPax result = Reader.Instance.stream(stream);
+    IPax result = XmlReader.Instance.stream(stream);
 
     assertNotNull(result);
     assertEquals("root", result.Tag());
@@ -45,7 +45,7 @@ class ReaderTest {
   @Test
   void testParseSimpleXml() throws IOException {
     String xml = "<root><child>test</child></root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertEquals("root", result.Tag());
     IPax child = result.Child().get("child");
@@ -56,7 +56,7 @@ class ReaderTest {
   @Test
   void testParseWithAttributes() throws IOException {
     String xml = "<root id=\"123\" name=\"test\"><child>value</child></root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertEquals("root", result.Tag());
     assertTrue(result.hasAttrib());
@@ -67,7 +67,7 @@ class ReaderTest {
   @Test
   void testParseNestedChildren() throws IOException {
     String xml = "<root><parent><child><grandchild>deep</grandchild></child></parent></root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertEquals("root", result.Tag());
     IPax parent = result.Child().get("parent");
@@ -82,7 +82,7 @@ class ReaderTest {
   @Test
   void testParseMultipleChildrenWithSameTag() throws IOException {
     String xml = "<root><item>1</item><item>2</item><item>3</item></root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertEquals("root", result.Tag());
     assertEquals(3, result.Child().cnt());
@@ -91,7 +91,7 @@ class ReaderTest {
   @Test
   void testParseEmptyElement() throws IOException {
     String xml = "<root><empty /></root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     IPax empty = result.Child().get("empty");
     assertNotNull(empty);
@@ -101,7 +101,7 @@ class ReaderTest {
   @Test
   void testParseSelfClosingTag() throws IOException {
     String xml = "<root><element attribute=\"value\" /></root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     IPax element = result.Child().get("element");
     assertNotNull(element);
@@ -114,7 +114,7 @@ class ReaderTest {
     Path file = tempDir.resolve("test.xml");
     Files.writeString(file, xml);
 
-    IPax result = Reader.Instance.parse(file.toString());
+    IPax result = XmlReader.Instance.parse(file.toString());
 
     assertNotNull(result);
     assertEquals("root", result.Tag());
@@ -127,7 +127,7 @@ class ReaderTest {
     Path file = tempDir.resolve("local.xml");
     Files.writeString(file, xml);
 
-    IPax result = Reader.Instance.parseLocalFile(file.toString());
+    IPax result = XmlReader.Instance.parseLocalFile(file.toString());
 
     assertNotNull(result);
     assertEquals("root", result.Tag());
@@ -135,14 +135,14 @@ class ReaderTest {
 
   @Test
   void testParseNullStream() {
-    IPax result = Reader.Instance.stream(null);
+    IPax result = XmlReader.Instance.stream(null);
     assertNull(result);
   }
 
   @Test
   void testParseWithComment() throws IOException {
     String xml = "<root><!-- this is a comment --><child>value</child></root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertNotNull(result);
     assertTrue(result.hasChild());
@@ -157,7 +157,7 @@ class ReaderTest {
     original.Child().add(title);
 
     String xml = original.XML();
-    IPax parsed = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax parsed = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertNotNull(parsed);
     assertEquals("book", parsed.Tag());
@@ -168,7 +168,7 @@ class ReaderTest {
   @Test
   void testParseXmlHeader() throws IOException {
     String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><root>content</root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertNotNull(result);
     assertEquals("root", result.Tag());
@@ -178,7 +178,7 @@ class ReaderTest {
   @Test
   void testParseWhitespaceHandling() throws IOException {
     String xml = "<root>\n  <child>value</child>\n</root>";
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     IPax child = result.Child().get("child");
     assertNotNull(child);
@@ -189,7 +189,7 @@ class ReaderTest {
   void testParseComplexDocument() throws IOException {
     String xml = "<?xml version=\"1.0\"?>" + "<library>" + "  <book id=\"1\">" + "    <title>Book Title</title>" + "    <author>Author Name</author>" + "  </book>" + "  <book id=\"2\">" + "    <title>Another Book</title>" + "    <author>Another Author</author>" + "  </book>" + "</library>";
 
-    IPax result = Reader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
+    IPax result = XmlReader.Instance.stream(new ByteArrayInputStream(xml.getBytes()));
 
     assertEquals("library", result.Tag());
     assertEquals(2, result.Child().cnt());

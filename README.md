@@ -330,53 +330,53 @@ String attrXml = root.Attrib().XML(); // returns "id=\"123\" type=\"novel\" "
 
 ---
 
-## Reader
+## XmlReader
 
 Parse XML from various sources.
 
-### Reader.Instance - Get singleton instance
+### XmlReader.Instance - Get singleton instance
 ```java
-Reader reader = Reader.Instance;
+XmlReader reader = XmlReader.Instance;
 ```
 
 ### parse(String filename) - Parse from file path
 ```java
-IPax root = Reader.Instance.parse("./config.xml");
+IPax root = XmlReader.Instance.parse("./config.xml");
 ```
 
 ### parseLocalFile(String filename) - Parse local file
 ```java
-IPax root = Reader.Instance.parseLocalFile("data.xml");
+IPax root = XmlReader.Instance.parseLocalFile("data.xml");
 ```
 
 ### stream(InputStream stream) - Parse from InputStream
 ```java
 String xml = "<book><title>Java</title></book>";
 InputStream is = new ByteArrayInputStream(xml.getBytes());
-IPax root = Reader.Instance.stream(is);
+IPax root = XmlReader.Instance.stream(is);
 ```
 
 ---
 
-## Writer
+## XmlWriter
 
 Write IPax trees to files.
 
-### Writer.Instance - Get singleton instance
+### XmlWriter.Instance - Get singleton instance
 ```java
-Writer writer = Writer.Instance;
+XmlWriter writer = XmlWriter.Instance;
 ```
 
 ### XML(IPax root) - Write to file using tag as filename
 ```java
 IPax book = Instances.Factory().produce("book");
 book.Val("Content");
-boolean success = Writer.Instance.XML(book); // writes to "book.xml"
+boolean success = XmlWriter.Instance.XML(book); // writes to "book.xml"
 ```
 
 ### XML(IPax root, String filename) - Write to specified file
 ```java
-boolean success = Writer.Instance.XML(book, "mybook.xml");
+boolean success = XmlWriter.Instance.XML(book, "mybook.xml");
 boolean success2 = Writer.Instance.XML(book, "output"); // adds .xml automatically
 ```
 
@@ -428,7 +428,7 @@ Output:
 ### Reading and Modifying XML
 ```java
 // Read from file
-IPax library = Reader.Instance.parse("library.xml");
+IPax library = XmlReader.Instance.parse("library.xml");
 
 // Find specific book using search
 IPax book = library.Child().search("/library/book");
@@ -438,7 +438,7 @@ IPax review = Instances.Factory().produce("review", "Excellent!");
 book.Child().add(review);
 
 // Write back to file
-Writer.Instance.XML(library, "library_updated.xml");
+XmlWriter.Instance.XML(library, "library_updated.xml");
 ```
 
 ### Copying Nodes

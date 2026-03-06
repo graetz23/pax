@@ -11,6 +11,8 @@ package de.graetz23.pax;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PaxTest {
@@ -323,5 +325,97 @@ class PaxTest {
     assertTrue(xml.contains("Effective Java"));
     assertTrue(xml.contains("<author>"));
     assertTrue(xml.contains("Joshua Bloch"));
+  }
+
+  @Test
+  void testSearchByTag() {
+    root.Tag("root");
+    root.Child().add("child");
+    root.Child().add("item");
+    root.Child().get("child").Child().add("item");
+    root.Child().get("child").Child().get("item").Child().add("item");
+
+    List<IPax> items = root.Child().searchByTag("item");
+    assertEquals(3, items.size());
+  }
+
+  @Test
+  void testSearchByTagNotFound() {
+    root.Tag("root");
+    root.Child().add("child");
+
+    List<IPax> found = root.Child().searchByTag("nonexistent");
+    assertTrue(found.isEmpty());
+  }
+
+  @Test
+  void testSearchByTagEmptyTree() {
+    root.Tag("root");
+
+    List<IPax> found = root.Child().searchByTag("root");
+    assertTrue(found.isEmpty());
+  }
+
+  @Test
+  void testSearchByTagNullTag() {
+    root.Tag("root");
+    root.Child().add("child");
+
+    List<IPax> found = root.Child().searchByTag(null);
+    assertTrue(found.isEmpty());
+  }
+
+  @Test
+  void testSearchByPath() {
+    root.Tag("root");
+    IPax child = Instances.Factory().produce("child");
+    root.Child().add(child);
+    child.Child().add("grandchild");
+    child.Child().add("grandchild");
+
+    List<IPax> found = root.Child().searchByPath("/root/child/grandchild");
+    assertEquals(2, found.size());
+  }
+
+  @Test
+  void testSearchByPathSingleMatch() {
+    root.Tag("root");
+    IPax child = Instances.Factory().produce("child");
+    root.Child().add(child);
+    IPax grandchild = Instances.Factory().produce("grandchild");
+    child.Child().add(grandchild);
+
+    List<IPax> found = root.Child().searchByPath("child/grandchild");
+    assertEquals(1, found.size());
+    assertEquals("grandchild", found.get(0).Tag());
+  }
+
+  @Test
+  void testSearchByPathNotFound() {
+    root.Tag("root");
+    root.Child().add("child");
+
+    List<IPax> found = root.Child().searchByPath("/root/child/nonexistent");
+    assertTrue(found.isEmpty());
+  }
+
+  @Test
+  void testSearchByPathWithRedundantSlashes() {
+    root.Tag("root");
+    IPax child = Instances.Factory().produce("child");
+    root.Child().add(child);
+    child.Child().add("grandchild");
+
+    List<IPax> found = root.Child().searchByPath("///child//grandchild///");
+    assertEquals(1, found.size());
+  }
+
+  @Test
+  void testSearchByPathEmptyPath() {
+    root.Tag("root");
+    root.Child().add("child");
+
+    List<IPax> found = root.Child().searchByPath("");
+    assertTrue(found.isEmpty());
   }
 }

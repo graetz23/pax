@@ -426,6 +426,98 @@ public class Pax implements IPax {
       return found;
     } // method
 
+    @Override
+    public List<IPax> searchByTag(String tag) {
+      List<IPax> results = new ArrayList<IPax>();
+      if (tag != null && !tag.isEmpty()) {
+        IPax ancestor = this.Ancestor();
+        if (ancestor != null) {
+          searchRecursive(ancestor, tag, results);
+        } // if
+      } // if
+      return results;
+    } // method
+
+    private void searchRecursive(IPax node, String tag, List<IPax> results) {
+      if (node == null || !node.hasChild()) {
+        return;
+      } // if
+
+      List<IPax> children = node.Child().all();
+      for (IPax child : children) {
+        if (child.hasTag() && child.Tag().equals(tag)) {
+          results.add(child);
+        } // if
+        searchRecursive(child, tag, results);
+      } // loop
+    } // method
+
+    @Override
+    public List<IPax> searchByPath(String path) {
+      List<IPax> results = new ArrayList<IPax>();
+      if (path == null || path.isEmpty()) {
+        return results;
+      } // if
+
+      String cleanedPath = path;
+      while (cleanedPath.contains("//")) {
+        cleanedPath = cleanedPath.replaceAll("//", "/");
+      } // loop
+      while (cleanedPath.startsWith("/")) {
+        cleanedPath = cleanedPath.substring(1);
+      } // loop
+      while (cleanedPath.endsWith("/")) {
+        cleanedPath = cleanedPath.substring(0, cleanedPath.length() - 1);
+      } // loop
+
+      if (cleanedPath.isEmpty()) {
+        return results;
+      } // if
+
+      String[] tags = cleanedPath.split("/");
+      List<String> pathTags = Arrays.asList(tags);
+
+      IPax ancestor = this.Ancestor();
+      if (ancestor != null) {
+        if (path.startsWith("/")) {
+          while (ancestor.hasParent()) {
+            ancestor = ancestor.Parent();
+          } // loop
+        } // if
+        searchPathRecursive(ancestor, pathTags, 0, results);
+      } // if
+
+      return results;
+    } // method
+
+    private void searchPathRecursive(IPax node, List<String> pathTags, int depth, List<IPax> results) {
+      if (node == null) {
+        return;
+      } // if
+
+      if (depth == pathTags.size()) {
+        results.add(node);
+        return;
+      } // if
+
+      String targetTag = pathTags.get(depth);
+
+      if (depth == 0 && node.hasTag() && node.Tag().equals(targetTag)) {
+        searchPathRecursive(node, pathTags, depth + 1, results);
+      } // if
+
+      if (!node.hasChild()) {
+        return;
+      } // if
+
+      List<IPax> children = node.Child().all();
+      for (IPax child : children) {
+        if (child.hasTag() && child.Tag().equals(targetTag)) {
+          searchPathRecursive(child, pathTags, depth + 1, results);
+        } // if
+      } // loop
+    } // method
+
   } // nested
 
   /**

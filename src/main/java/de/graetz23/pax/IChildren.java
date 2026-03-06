@@ -22,6 +22,8 @@
 
 package de.graetz23.pax;
 
+import java.util.List;
+
 public interface IChildren extends ISubset {
 
   // overload or add methods, if necessary
@@ -47,5 +49,37 @@ public interface IChildren extends ISubset {
    * @return the found {@link IPax} node, or {@code null} if not found
    */
   IPax search(String path);
+
+  /**
+   * Recursively searches for all nodes in the subtree whose tag equals
+   * the given tag name. The search descends through all descendants at
+   * any depth.
+   *
+   * @param tag the tag name to search for
+   * @return a list of all matching {@link IPax} nodes; empty if none found
+   */
+  List<IPax> searchByTag(String tag);
+
+  /**
+   * Recursively searches for nodes by an XPath-like path expression.
+   * The path is split by "/" and each segment represents a tag name to
+   * match at each level of the tree. The search finds ALL nodes that
+   * match the complete path, not just the first one.
+   *
+   * <p>Examples:</p>
+   * <ul>
+   *   <li>{@code searchByPath("/root/child/grandchild")} - finds all
+   *       "grandchild" nodes under "child" under "root"</li>
+   *   <li>{@code searchByPath("child/grandchild")} - relative path from
+   *       current node</li>
+   * </ul>
+   *
+   * <p>Redundant slashes are ignored. Returns an empty list if no matches
+   * are found.</p>
+   *
+   * @param path the XPath-like path with "/" as separator
+   * @return a list of all matching {@link IPax} nodes; empty if none found
+   */
+  List<IPax> searchByPath(String path);
 
 } // interface

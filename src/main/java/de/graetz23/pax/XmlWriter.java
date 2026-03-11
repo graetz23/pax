@@ -1,13 +1,13 @@
 /**
  * @brief pax
- * @details A Java written generator for plain old XML (POX) data domains
+ * @details An object-tree combined with a tolerant reader to parse any XML
  * @copyright Copyright (c) 2017-2026 Christian (graetz23@gmail.com)
  * @author Christian (graetz23@gmail.com)
  * @file XmlWriter.java
  *
  * Singleton utility for persisting a {@link IPax} node tree to an XML
  * file on disk. The output is always UTF-8 encoded and prefixed with the
- * XML 1.1 declaration {@code <?xml version="1.1" encoding="UTF-8"?>}.
+ * XML 1.0 declaration {@code <?xml version="1.0" encoding="UTF-8"?>}.
  *
  * <p>Typical usage:</p>
  * <pre>{@code
@@ -24,10 +24,8 @@
 
 package de.graetz23.pax;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -59,11 +57,11 @@ public class XmlWriter {
     public boolean XML(IPax root) {
         boolean wasWritten = false;
         if (root != null) {
-            String tag = "__file_noname";
+            String tag = "__file_not_named";
             if (root.hasTag()) {
                 tag = root.Tag();
             } // if
-            wasWritten = XML(root, tag);
+            wasWritten = byBytes(new XmlFile(root), tag);
         } // if
         return wasWritten;
     } // method
@@ -85,19 +83,53 @@ public class XmlWriter {
     public boolean XML(IPax root, String fileName) {
         boolean wasWritten = false;
         if (root != null) {
+            wasWritten = byBytes(new XmlFile(root), fileName);
+        } // if
+        return wasWritten;
+    } // method
+
+
+    public boolean byStrings(XmlFile xmlFile, String fileName) {
+        boolean wasWritten = false;
+        if (xmlFile != null) {
+
             if (!fileName.toLowerCase().endsWith(".xml")) {
                 fileName += ".xml";
             } // if
 
             try {
+
+                Charset charset = xmlFile.getCharset();
+                CharsetEncoder encoder = charset.newEncoder(); // get sure to write UTF-8
+
                 OutputStream stream = new FileOutputStream(fileName); // streaming the content
-                CharsetEncoder encoder = StandardCharsets.UTF_8.newEncoder(); // get sure to write UTF-8
                 OutputStreamWriter file = new OutputStreamWriter(stream, encoder);
-                String xml = root.XML();
-                String header = "<?xml version=\"1.1\" encoding=\"UTF-8\"?>" + Statics.LineSeparator;
-                file.write(header);
-                file.write(xml);
+
+                file.write(xmlFile.getXml());
+
                 file.close();
+                wasWritten = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } // try
+        } // if
+        return wasWritten;
+    } // method
+
+
+    public boolean byBytes(XmlFile xmlFile, String fileName) {
+        boolean wasWritten = false;
+        if (xmlFile != null) {
+
+            if (!fileName.toLowerCase().endsWith(".xml")) {
+                fileName += ".xml";
+            } // if
+
+            try {
+
+                OutputStream stream = new FileOutputStream(fileName); // streaming the content
+                stream.write(xmlFile.getBytes());
+
                 wasWritten = true;
             } catch (IOException e) {
                 e.printStackTrace();

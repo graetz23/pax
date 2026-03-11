@@ -1,6 +1,6 @@
 /**
  * @brief pax
- * @details A Java written generator for plain old XML (POX) data domains
+ * @details An object-tree combined with a tolerant reader to parse any XML
  * @copyright Copyright (c) 2017-2026 Christian (graetz23@gmail.com)
  * @author Christian (graetz23@gmail.com)
  * @file XmlReader.java

@@ -1,6 +1,6 @@
 /**
  * @brief pax
- * @details A Java written generator for plain old XML (POX) data domains
+ * @details An object-tree combined with a tolerant reader to parse any XML
  * @copyright Copyright (c) 2017-2026 Christian (graetz23@gmail.com)
  * @author Christian (graetz23@gmail.com)
  * @file XmlGenerator.java
@@ -55,7 +55,7 @@ public class XmlGenerator {
    *         {@code pax}; may be an empty string for a null or tag-less node
    */
   public static String generate(IPax pax) {
-    StringBuilder xml = new StringBuilder(Statics.Indent());
+    StringBuilder xml = new StringBuilder();
     return generateElement(pax, xml).toString();
   } // method
 
@@ -93,6 +93,7 @@ public class XmlGenerator {
     if (pax == null || !pax.hasTag()) {
       return xml;
     }
+    xml.append(Statics.Indent());
     if (!pax.hasChild()) {
       if (pax.hasVal()) {
         if (pax.Tag().startsWith(Identity.COMMENT)) {

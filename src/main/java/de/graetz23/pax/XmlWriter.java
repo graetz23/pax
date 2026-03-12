@@ -28,8 +28,12 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class XmlWriter {
+
+    private static final Logger LOGGER = Logger.getLogger(XmlWriter.class.getName());
 
     /**
      * The singleton instance. Use this field to call write methods, e.g.
@@ -110,7 +114,7 @@ public class XmlWriter {
                 file.close();
                 wasWritten = true;
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Failed to write XML file (byStrings): " + fileName, e);
             } // try
         } // if
         return wasWritten;
@@ -132,7 +136,7 @@ public class XmlWriter {
 
                 wasWritten = true;
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Failed to write XML file (byBytes): " + fileName, e);
             } // try
         } // if
         return wasWritten;

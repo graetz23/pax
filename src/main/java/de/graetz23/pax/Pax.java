@@ -394,7 +394,7 @@ public class Pax implements IPax {
           } // loop
 
           boolean wasFound = false;
-          List<String> list = Arrays.stream(path.split("/")).toList();
+          List<String> list = Arrays.asList(path.split("/"));
           for (String tag : list) {
 
             if (current.Child().has(tag)) {

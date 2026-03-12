@@ -38,6 +38,8 @@ package de.graetz23.pax;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
@@ -46,6 +48,8 @@ import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class XmlReader {
+
+  private static final Logger LOGGER = Logger.getLogger(XmlReader.class.getName());
 
   /**
    * The singleton instance. Use this field to call parsing methods, e.g.
@@ -86,7 +90,7 @@ public class XmlReader {
         System.out.println("InputStream is null - no file found");
       } //
     } catch (Exception exception) {
-      exception.printStackTrace();
+      LOGGER.log(Level.SEVERE, "Failed to parse XML file: " + filename, exception);
     } // try
 
     return root;
@@ -114,7 +118,7 @@ public class XmlReader {
       parser.parse(filename, handler);
       root = handler.getRoot();
     } catch (Exception exception) {
-      exception.printStackTrace();
+      LOGGER.log(Level.SEVERE, "Failed to parse XML file: " + filename, exception);
     } // try
 
     return root;
@@ -146,7 +150,7 @@ public class XmlReader {
         System.out.println("InputStream is null - no file found");
       } //
     } catch (Exception exception) {
-      exception.printStackTrace();
+      LOGGER.log(Level.SEVERE, "Failed to parse XML from InputStream", exception);
     } // try
 
     return root;

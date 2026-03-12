@@ -4,6 +4,21 @@
  * @copyright Copyright (c) 2017-2026 Christian (graetz23@gmail.com)
  * @author Christian (graetz23@gmail.com)
  * @file JsonReader.java
+ *
+ * Singleton utility for parsing JSON strings into a {@link IPax} node tree.
+ * Supports the PAX JSON format produced by {@link JsonGenerator}, which uses
+ * four reserved keys ({@code __tag__}, {@code __value__}, {@code __attributes__},
+ * and {@code __children__}) to represent XML node structure.
+ *
+ * <p>Three entry points are provided:</p>
+ * <ul>
+ *   <li>{@link #parse(String)} – reads JSON from a file by path</li>
+ *   <li>{@link #stream(InputStream)} – parses JSON from any input stream</li>
+ *   <li>{@link #parseJson(String)} – parses JSON from a string directly</li>
+ * </ul>
+ *
+ * @see IPax#JSON()
+ * @see JsonGenerator
  */
 
 package de.graetz23.pax;
@@ -12,25 +27,56 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JsonReader {
 
+  private static final Logger LOGGER = Logger.getLogger(JsonReader.class.getName());
+
+  /**
+   * The singleton instance. Use this field to call parsing methods, e.g.
+   * {@code JsonReader.Instance.parse("data.json")}.
+   */
   public static JsonReader Instance = new JsonReader();
 
+  /**
+   * Private constructor enforcing the singleton pattern.
+   */
   private JsonReader() {
   }
 
+  /**
+   * Parses the JSON file at the given file-system path by opening it as a
+   * {@link FileInputStream} and delegating to the stream parser. Returns
+   * {@code null} and prints a stack trace if the file cannot be found or
+   * the JSON is malformed.
+   *
+   * @param filename the path to the JSON file; resolved by the OS
+   * @return the root {@link IPax} of the parsed tree, or {@code null} on
+   *         any error
+   */
   public IPax parse(String filename) {
     IPax root = null;
     try {
       FileInputStream fis = new FileInputStream(filename);
       root = stream(fis);
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, "Failed to read JSON file: " + filename, e);
     }
     return root;
   }
 
+  /**
+   * Parses JSON from the given {@link InputStream}. Useful when the JSON
+   * content originates from a network connection, classpath resource, or
+   * in-memory buffer rather than a file on disk.
+   *
+   * @param stream the input stream carrying the JSON content; must not be
+   *               {@code null}
+   * @return the root {@link IPax} of the parsed tree, or {@code null} on
+   *         any error
+   */
   public IPax stream(InputStream stream) {
     IPax root = null;
     try {
@@ -41,11 +87,19 @@ public class JsonReader {
         System.out.println("InputStream is null - no data found");
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, "Failed to read JSON from InputStream", e);
     }
     return root;
   }
 
+  /**
+   * Parses a JSON string directly into an {@link IPax} node tree.
+   * The string must be valid JSON in the PAX JSON format.
+   *
+   * @param json the JSON string to parse; must not be {@code null}
+   * @return the root {@link IPax} of the parsed tree, or {@code null} if
+   *         the input is null or empty
+   */
   public IPax parseJson(String json) {
     IPax root = null;
     if (json != null && !json.trim().isEmpty()) {
@@ -55,16 +109,31 @@ public class JsonReader {
     return root;
   }
 
+  /**
+   * Internal recursive-descent JSON parser that converts a JSON string
+   * into an {@link IPax} node tree following the PAX JSON format.
+   * Handles objects, arrays, strings, numbers, booleans, and null values.
+   */
   private static class JsonParser {
     private final String json;
     private int pos = 0;
     private int length;
 
+    /**
+     * Constructs a new parser for the given JSON string.
+     *
+     * @param json the JSON string to parse; must not be {@code null}
+     */
     public JsonParser(String json) {
       this.json = json;
       this.length = json.length();
     }
 
+    /**
+     * Parses the entire JSON string and returns the root {@link IPax} node.
+     *
+     * @return the root IPax node representing the JSON value
+     */
     public IPax parse() {
       skipWhitespace();
       return parseValue();

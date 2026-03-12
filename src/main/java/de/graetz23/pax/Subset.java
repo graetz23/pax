@@ -335,7 +335,7 @@ public class Subset implements ISubset {
     public List<IPax> all() {
         List<IPax> all = new ArrayList<>();
         if (cnt() > 0) {
-            all = _hashMap.values().stream().toList();
+            all = new ArrayList<>(_hashMap.values());
         } // if
         return all;
     } // method
@@ -350,7 +350,7 @@ public class Subset implements ISubset {
     public List<IPax> all(String tag) {
         List<IPax> filtered = new ArrayList<>();
         if (cnt() > 0) {
-            List<IPax> all = _hashMap.values().stream().toList();
+            List<IPax> all = new ArrayList<>(_hashMap.values());
             for (IPax child : all) {
                 if (child.Tag().toLowerCase().startsWith(tag.toLowerCase())) {
                     filtered.add(child);
@@ -371,7 +371,7 @@ public class Subset implements ISubset {
     public <T extends IPax> List<T> typed() {
         List<T> filtered = new ArrayList<>();
         if (cnt() > 0) {
-            List<IPax> all = _hashMap.values().stream().toList();
+            List<IPax> all = new ArrayList<>(_hashMap.values());
             for (IPax child : all) {
                 T typedPax = (T) child;
                 filtered.add(typedPax);
@@ -392,7 +392,7 @@ public class Subset implements ISubset {
     public <T extends IPax> List<T> typed(String tag) {
         List<T> filtered = new ArrayList<>();
         if (cnt() > 0) {
-            List<IPax> all = _hashMap.values().stream().toList();
+            List<IPax> all = new ArrayList<>(_hashMap.values());
             for (IPax child : all) {
                 if (child.Tag().toLowerCase().startsWith(tag.toLowerCase())) {
                     T typedPax = (T) child;

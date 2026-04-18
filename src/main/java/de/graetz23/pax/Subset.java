@@ -84,6 +84,24 @@ public class Subset implements ISubset {
     } // method
 
     /**
+     * Returns the last element in insertion order, or {@code null} if the
+     * collection is empty.
+     *
+     * @return the first {@link IPax}, or {@code null}
+     */
+    @Override
+    public IPax Last() {
+        IPax last = null;
+        if (!_hashMap.isEmpty()) {
+            int cnt = cnt();
+            if(cnt > 0) {
+                last = get(cnt - 1);
+            } // if
+        } // if
+        return last;
+    } // method
+
+    /**
      * {@inheritDoc}
      * Uses {@link LinkedHashMap#containsKey(Object)} for an O(1) lookup
      * against the exact map key. Note that duplicate entries are stored

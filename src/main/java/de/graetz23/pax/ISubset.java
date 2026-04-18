@@ -58,6 +58,14 @@ interface ISubset {
     IPax First();
 
     /**
+     * Returns the last element in insertion order, or {@code null} if the
+     * collection is empty.
+     *
+     * @return the first {@link IPax}, or {@code null}
+     */
+    IPax Last();
+
+    /**
      * Returns {@code true} when the collection contains an entry whose map
      * key equals the given tag. Note that duplicate entries are stored
      * under synthetic keys, so only the original (first) entry is found

@@ -86,7 +86,7 @@ public class XmlFile {
 
   /**
    * Returns the complete XML document as a string, including
-   * the XML declaration header.
+   * the XML header declaration.
    *
    * @return the XML string, or {@code null} if root is {@code null}
    */
@@ -96,6 +96,23 @@ public class XmlFile {
       StringBuilder stringBuilder = new StringBuilder();
       stringBuilder.append(getHeader(_charset) + Statics.LineSeparator);
       stringBuilder.append(_root.XML());
+      xml = stringBuilder.toString();
+    } // if
+    return xml;
+  } // method
+
+  /**
+   * Returns the complete XML document as a string, without breaklines,
+   * including the XML header declaration .
+   *
+   * @return the XML string, or {@code null} if root is {@code null}
+   */
+  public String getXml_lined() {
+    String xml = null;
+    if (_root != null) {
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.append(getHeader(_charset));
+      stringBuilder.append(_root.XML_lined());
       xml = stringBuilder.toString();
     } // if
     return xml;
